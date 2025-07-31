@@ -1,0 +1,2425 @@
+{
+  "version": 4,
+  "terraform_version": "1.12.2",
+  "serial": 148,
+  "lineage": "cb05fcfc-63b2-9678-4a1f-82a33bd0690d",
+  "outputs": {
+    "tenant_a_role_arn": {
+      "value": "arn:aws:iam::851725174812:role/TenantA-Role",
+      "type": "string"
+    },
+    "tenant_b_role_arn": {
+      "value": "arn:aws:iam::851725174812:role/TenantB-Role",
+      "type": "string"
+    }
+  },
+  "resources": [
+    {
+      "mode": "data",
+      "type": "archive_file",
+      "name": "lambda_zip",
+      "provider": "provider[\"registry.terraform.io/hashicorp/archive\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "exclude_symlink_directories": null,
+            "excludes": null,
+            "id": "87afc08dcbcbd875b077912e148347df451e0f30",
+            "output_base64sha256": "0ByeSRFchyV2BuZW2LfJlCbdHHZi7bwaEEbz/QzqqUk=",
+            "output_base64sha512": "ZwTun9/2EcC4oHjyOcp/76pYymj65/4HxvxLIVzicAO8WFxiaZ1djdOf0rAKP8PFRZSps5dal2EgV0Ii0l1e1w==",
+            "output_file_mode": null,
+            "output_md5": "1b4b8b79b76e2734fc066e661df9fa5f",
+            "output_path": "./lambda_function_payload.zip",
+            "output_sha": "87afc08dcbcbd875b077912e148347df451e0f30",
+            "output_sha256": "d01c9e49115c87257606e656d8b7c99426dd1c7662edbc1a1046f3fd0ceaa949",
+            "output_sha512": "6704ee9fdff611c0b8a078f239ca7fefaa58ca68fae7fe07c6fc4b215ce27003bc585c62699d5d8dd39fd2b00a3fc3c54594a9b3975a976120574222d25d5ed7",
+            "output_size": 700,
+            "source": [],
+            "source_content": null,
+            "source_content_filename": null,
+            "source_dir": "./lambda",
+            "source_file": null,
+            "type": "zip"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_apigatewayv2_api",
+      "name": "upload_api",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "api_endpoint": "https://pr5fciwe4a.execute-api.us-east-1.amazonaws.com",
+            "api_key_selection_expression": "$request.header.x-api-key",
+            "arn": "arn:aws:apigateway:us-east-1::/apis/pr5fciwe4a",
+            "body": null,
+            "cors_configuration": [],
+            "credentials_arn": null,
+            "description": "",
+            "disable_execute_api_endpoint": false,
+            "execution_arn": "arn:aws:execute-api:us-east-1:851725174812:pr5fciwe4a",
+            "fail_on_warnings": null,
+            "id": "pr5fciwe4a",
+            "ip_address_type": "ipv4",
+            "name": "UploadAPI",
+            "protocol_type": "HTTP",
+            "route_key": null,
+            "route_selection_expression": "$request.method $request.path",
+            "tags": {},
+            "tags_all": {},
+            "target": null,
+            "version": ""
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA=="
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_apigatewayv2_integration",
+      "name": "lambda_integration",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "api_id": "pr5fciwe4a",
+            "connection_id": "",
+            "connection_type": "INTERNET",
+            "content_handling_strategy": "",
+            "credentials_arn": "",
+            "description": "",
+            "id": "ouweje2",
+            "integration_method": "POST",
+            "integration_response_selection_expression": "",
+            "integration_subtype": "",
+            "integration_type": "AWS_PROXY",
+            "integration_uri": "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:851725174812:function:s3UploadLambda/invocations",
+            "passthrough_behavior": "",
+            "payload_format_version": "2.0",
+            "request_parameters": {},
+            "request_templates": {},
+            "response_parameters": [],
+            "template_selection_expression": "",
+            "timeout_milliseconds": 30000,
+            "tls_config": []
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_apigatewayv2_api.upload_api",
+            "aws_iam_role.lambda_exec",
+            "aws_lambda_function.upload_handler",
+            "data.archive_file.lambda_zip"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_apigatewayv2_route",
+      "name": "upload_route",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "api_id": "pr5fciwe4a",
+            "api_key_required": false,
+            "authorization_scopes": [],
+            "authorization_type": "NONE",
+            "authorizer_id": "",
+            "id": "s58820u",
+            "model_selection_expression": "",
+            "operation_name": "",
+            "request_models": {},
+            "request_parameter": [],
+            "route_key": "POST /upload",
+            "route_response_selection_expression": "",
+            "target": "integrations/ouweje2"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_apigatewayv2_api.upload_api",
+            "aws_apigatewayv2_integration.lambda_integration",
+            "aws_iam_role.lambda_exec",
+            "aws_lambda_function.upload_handler",
+            "data.archive_file.lambda_zip"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_apigatewayv2_stage",
+      "name": "default",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "access_log_settings": [],
+            "api_id": "pr5fciwe4a",
+            "arn": "arn:aws:apigateway:us-east-1::/apis/pr5fciwe4a/stages/$default",
+            "auto_deploy": true,
+            "client_certificate_id": "",
+            "default_route_settings": [
+              {
+                "data_trace_enabled": false,
+                "detailed_metrics_enabled": false,
+                "logging_level": "",
+                "throttling_burst_limit": 0,
+                "throttling_rate_limit": 0
+              }
+            ],
+            "deployment_id": "jzfku0",
+            "description": "",
+            "execution_arn": "arn:aws:execute-api:us-east-1:851725174812:pr5fciwe4a/$default",
+            "id": "$default",
+            "invoke_url": "https://pr5fciwe4a.execute-api.us-east-1.amazonaws.com/",
+            "name": "$default",
+            "route_settings": [],
+            "stage_variables": {},
+            "tags": {},
+            "tags_all": {}
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_apigatewayv2_api.upload_api"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_cloudtrail",
+      "name": "multi_tenant_trail",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "advanced_event_selector": [],
+            "arn": "arn:aws:cloudtrail:us-east-1:851725174812:trail/multi-tenant-trail",
+            "cloud_watch_logs_group_arn": "",
+            "cloud_watch_logs_role_arn": "",
+            "enable_log_file_validation": true,
+            "enable_logging": true,
+            "event_selector": [
+              {
+                "data_resource": [
+                  {
+                    "type": "AWS::S3::Object",
+                    "values": [
+                      "arn:aws:s3:::"
+                    ]
+                  }
+                ],
+                "exclude_management_event_sources": [],
+                "include_management_events": true,
+                "read_write_type": "All"
+              }
+            ],
+            "home_region": "us-east-1",
+            "id": "arn:aws:cloudtrail:us-east-1:851725174812:trail/multi-tenant-trail",
+            "include_global_service_events": true,
+            "insight_selector": [],
+            "is_multi_region_trail": true,
+            "is_organization_trail": false,
+            "kms_key_id": "",
+            "name": "multi-tenant-trail",
+            "s3_bucket_name": "multi-tenant-cloudtrail-logs",
+            "s3_key_prefix": "",
+            "sns_topic_arn": "",
+            "sns_topic_name": "",
+            "tags": {
+              "Name": "MultiTenantCloudTrail"
+            },
+            "tags_all": {
+              "Name": "MultiTenantCloudTrail"
+            }
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjEifQ==",
+          "dependencies": [
+            "aws_s3_bucket.cloudtrail_logs",
+            "aws_s3_bucket_policy.cloudtrail_policy"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_config_config_rule",
+      "name": "s3_encryption_rule",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:config:us-east-1:851725174812:config-rule/config-rule-uxa2tx",
+            "description": "",
+            "evaluation_mode": [
+              {
+                "mode": "DETECTIVE"
+              }
+            ],
+            "id": "s3-bucket-server-side-encryption-enabled",
+            "input_parameters": "",
+            "maximum_execution_frequency": "",
+            "name": "s3-bucket-server-side-encryption-enabled",
+            "rule_id": "config-rule-uxa2tx",
+            "scope": [],
+            "source": [
+              {
+                "custom_policy_details": [],
+                "owner": "AWS",
+                "source_detail": [],
+                "source_identifier": "S3_BUCKET_SERVER_SIDE_ENCRYPTION_ENABLED"
+              }
+            ],
+            "tags": {},
+            "tags_all": {}
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_config_configuration_recorder.config",
+            "aws_config_configuration_recorder_status.config_status",
+            "aws_config_delivery_channel.config_channel",
+            "aws_iam_role.aws_config_role",
+            "aws_s3_bucket.cloudtrail_logs"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_config_config_rule",
+      "name": "s3_public_access_blocked",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:config:us-east-1:851725174812:config-rule/config-rule-5pirjs",
+            "description": "",
+            "evaluation_mode": [
+              {
+                "mode": "DETECTIVE"
+              }
+            ],
+            "id": "s3-bucket-public-read-prohibited",
+            "input_parameters": "",
+            "maximum_execution_frequency": "",
+            "name": "s3-bucket-public-read-prohibited",
+            "rule_id": "config-rule-5pirjs",
+            "scope": [],
+            "source": [
+              {
+                "custom_policy_details": [],
+                "owner": "AWS",
+                "source_detail": [],
+                "source_identifier": "S3_BUCKET_PUBLIC_READ_PROHIBITED"
+              }
+            ],
+            "tags": {},
+            "tags_all": {}
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_config_configuration_recorder.config",
+            "aws_config_configuration_recorder_status.config_status",
+            "aws_config_delivery_channel.config_channel",
+            "aws_iam_role.aws_config_role",
+            "aws_s3_bucket.cloudtrail_logs"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_config_configuration_recorder",
+      "name": "config",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "id": "multi-tenant-config",
+            "name": "multi-tenant-config",
+            "recording_group": [
+              {
+                "all_supported": true,
+                "exclusion_by_resource_types": [
+                  {
+                    "resource_types": []
+                  }
+                ],
+                "include_global_resource_types": true,
+                "recording_strategy": [
+                  {
+                    "use_only": "ALL_SUPPORTED_RESOURCE_TYPES"
+                  }
+                ],
+                "resource_types": []
+              }
+            ],
+            "recording_mode": [
+              {
+                "recording_frequency": "CONTINUOUS",
+                "recording_mode_override": []
+              }
+            ],
+            "role_arn": "arn:aws:iam::851725174812:role/aws-config-role"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_iam_role.aws_config_role"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_config_configuration_recorder_status",
+      "name": "config_status",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "id": "multi-tenant-config",
+            "is_enabled": true,
+            "name": "multi-tenant-config"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_config_configuration_recorder.config",
+            "aws_config_delivery_channel.config_channel",
+            "aws_iam_role.aws_config_role",
+            "aws_s3_bucket.cloudtrail_logs"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_config_delivery_channel",
+      "name": "config_channel",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "id": "multi-tenant-config-channel",
+            "name": "multi-tenant-config-channel",
+            "s3_bucket_name": "multi-tenant-cloudtrail-logs",
+            "s3_key_prefix": "",
+            "s3_kms_key_arn": "",
+            "snapshot_delivery_properties": [],
+            "sns_topic_arn": ""
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_s3_bucket.cloudtrail_logs"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_iam_policy",
+      "name": "lambda_s3_kms",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:iam::851725174812:policy/lambda_s3_kms_policy",
+            "attachment_count": 1,
+            "description": "",
+            "id": "arn:aws:iam::851725174812:policy/lambda_s3_kms_policy",
+            "name": "lambda_s3_kms_policy",
+            "name_prefix": "",
+            "path": "/",
+            "policy": "{\"Statement\":[{\"Action\":[\"s3:PutObject\"],\"Effect\":\"Allow\",\"Resource\":\"arn:aws:s3:::tenanta-user1-storage/*\"},{\"Action\":[\"kms:GenerateDataKey\",\"kms:Encrypt\"],\"Effect\":\"Allow\",\"Resource\":\"arn:aws:kms:us-east-1:851725174812:key/8563cb93-22f7-4860-9e51-0bd2909848ec\"}],\"Version\":\"2012-10-17\"}",
+            "policy_id": "ANPA4MTWGZAOJXVJV7C47",
+            "tags": {},
+            "tags_all": {}
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA=="
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_iam_role",
+      "name": "aws_config_role",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:iam::851725174812:role/aws-config-role",
+            "assume_role_policy": "{\"Statement\":[{\"Action\":\"sts:AssumeRole\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"config.amazonaws.com\"}}],\"Version\":\"2012-10-17\"}",
+            "create_date": "2025-07-05T16:00:36Z",
+            "description": "",
+            "force_detach_policies": false,
+            "id": "aws-config-role",
+            "inline_policy": [
+              {
+                "name": "aws-config-policy",
+                "policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":[\"s3:PutObject\",\"s3:GetBucketAcl\"],\"Effect\":\"Allow\",\"Resource\":[\"arn:aws:s3:::multi-tenant-cloudtrail-logs/AWSLogs/*\",\"arn:aws:s3:::multi-tenant-cloudtrail-logs\"]},{\"Action\":[\"config:Put*\",\"config:Get*\",\"config:Describe*\",\"config:Deliver*\"],\"Effect\":\"Allow\",\"Resource\":\"*\"}]}"
+              }
+            ],
+            "managed_policy_arns": [],
+            "max_session_duration": 3600,
+            "name": "aws-config-role",
+            "name_prefix": "",
+            "path": "/",
+            "permissions_boundary": "",
+            "tags": {},
+            "tags_all": {},
+            "unique_id": "AROA4MTWGZAOGGWLKLK7Q"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA=="
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_iam_role",
+      "name": "lambda_exec",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:iam::851725174812:role/lambda_s3_exec_role",
+            "assume_role_policy": "{\"Statement\":[{\"Action\":\"sts:AssumeRole\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"lambda.amazonaws.com\"}}],\"Version\":\"2012-10-17\"}",
+            "create_date": "2025-07-14T19:31:49Z",
+            "description": "",
+            "force_detach_policies": false,
+            "id": "lambda_s3_exec_role",
+            "inline_policy": [],
+            "managed_policy_arns": [
+              "arn:aws:iam::851725174812:policy/lambda_s3_kms_policy"
+            ],
+            "max_session_duration": 3600,
+            "name": "lambda_s3_exec_role",
+            "name_prefix": "",
+            "path": "/",
+            "permissions_boundary": "",
+            "tags": {},
+            "tags_all": {},
+            "unique_id": "AROA4MTWGZAOGHAWLHAXP"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA=="
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_iam_role",
+      "name": "tenant_a_role",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:iam::851725174812:role/TenantA-Role",
+            "assume_role_policy": "{\"Statement\":[{\"Action\":\"sts:AssumeRole\",\"Effect\":\"Allow\",\"Principal\":{\"AWS\":\"*\"}}],\"Version\":\"2012-10-17\"}",
+            "create_date": "2025-07-05T11:01:01Z",
+            "description": "",
+            "force_detach_policies": false,
+            "id": "TenantA-Role",
+            "inline_policy": [],
+            "managed_policy_arns": [],
+            "max_session_duration": 3600,
+            "name": "TenantA-Role",
+            "name_prefix": "",
+            "path": "/",
+            "permissions_boundary": "",
+            "tags": {},
+            "tags_all": {},
+            "unique_id": "AROA4MTWGZAOLZLYVIZOO"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA=="
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_iam_role",
+      "name": "tenant_b_role",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:iam::851725174812:role/TenantB-Role",
+            "assume_role_policy": "{\"Statement\":[{\"Action\":\"sts:AssumeRole\",\"Effect\":\"Allow\",\"Principal\":{\"AWS\":\"*\"}}],\"Version\":\"2012-10-17\"}",
+            "create_date": "2025-07-05T11:01:01Z",
+            "description": "",
+            "force_detach_policies": false,
+            "id": "TenantB-Role",
+            "inline_policy": [],
+            "managed_policy_arns": [],
+            "max_session_duration": 3600,
+            "name": "TenantB-Role",
+            "name_prefix": "",
+            "path": "/",
+            "permissions_boundary": "",
+            "tags": {},
+            "tags_all": {},
+            "unique_id": "AROA4MTWGZAOOM7U54GT2"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA=="
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_iam_role_policy",
+      "name": "config_policy_inline",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "id": "aws-config-role:aws-config-policy",
+            "name": "aws-config-policy",
+            "name_prefix": "",
+            "policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":[\"s3:PutObject\",\"s3:GetBucketAcl\"],\"Effect\":\"Allow\",\"Resource\":[\"arn:aws:s3:::multi-tenant-cloudtrail-logs/AWSLogs/*\",\"arn:aws:s3:::multi-tenant-cloudtrail-logs\"]},{\"Action\":[\"config:Put*\",\"config:Get*\",\"config:Describe*\",\"config:Deliver*\"],\"Effect\":\"Allow\",\"Resource\":\"*\"}]}",
+            "role": "aws-config-role"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_iam_role.aws_config_role"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_iam_role_policy_attachment",
+      "name": "lambda_policy_attach",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "id": "lambda_s3_exec_role-20250714193151481500000001",
+            "policy_arn": "arn:aws:iam::851725174812:policy/lambda_s3_kms_policy",
+            "role": "lambda_s3_exec_role"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_iam_policy.lambda_s3_kms",
+            "aws_iam_role.lambda_exec"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_iam_user",
+      "name": "tenanta_user1",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:iam::851725174812:user/TenantA-User1",
+            "force_destroy": false,
+            "id": "TenantA-User1",
+            "name": "TenantA-User1",
+            "path": "/",
+            "permissions_boundary": "",
+            "tags": {
+              "Tenant": "TenantA"
+            },
+            "tags_all": {
+              "Tenant": "TenantA"
+            },
+            "unique_id": "AIDA4MTWGZAOJ5JQIWNZX"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA=="
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_iam_user",
+      "name": "tenanta_user2",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:iam::851725174812:user/TenantA-User2",
+            "force_destroy": false,
+            "id": "TenantA-User2",
+            "name": "TenantA-User2",
+            "path": "/",
+            "permissions_boundary": "",
+            "tags": {
+              "Tenant": "TenantA"
+            },
+            "tags_all": {
+              "Tenant": "TenantA"
+            },
+            "unique_id": "AIDA4MTWGZAOCIRDDUN2A"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA=="
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_iam_user",
+      "name": "tenanta_user3",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:iam::851725174812:user/TenantA-User3",
+            "force_destroy": false,
+            "id": "TenantA-User3",
+            "name": "TenantA-User3",
+            "path": "/",
+            "permissions_boundary": "",
+            "tags": {
+              "Tenant": "TenantA"
+            },
+            "tags_all": {
+              "Tenant": "TenantA"
+            },
+            "unique_id": "AIDA4MTWGZAOPETC2O3ZK"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA=="
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_iam_user",
+      "name": "tenantb_user1",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:iam::851725174812:user/TenantB-User1",
+            "force_destroy": false,
+            "id": "TenantB-User1",
+            "name": "TenantB-User1",
+            "path": "/",
+            "permissions_boundary": "",
+            "tags": {
+              "Tenant": "TenantB"
+            },
+            "tags_all": {
+              "Tenant": "TenantB"
+            },
+            "unique_id": "AIDA4MTWGZAOCTMTQBEGT"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA=="
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_iam_user",
+      "name": "tenantb_user2",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:iam::851725174812:user/TenantB-User2",
+            "force_destroy": false,
+            "id": "TenantB-User2",
+            "name": "TenantB-User2",
+            "path": "/",
+            "permissions_boundary": "",
+            "tags": {
+              "Tenant": "TenantB"
+            },
+            "tags_all": {
+              "Tenant": "TenantB"
+            },
+            "unique_id": "AIDA4MTWGZAOKRPFAWUWV"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA=="
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_iam_user",
+      "name": "tenantb_user3",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:iam::851725174812:user/TenantB-User3",
+            "force_destroy": false,
+            "id": "TenantB-User3",
+            "name": "TenantB-User3",
+            "path": "/",
+            "permissions_boundary": "",
+            "tags": {
+              "Tenant": "TenantB"
+            },
+            "tags_all": {
+              "Tenant": "TenantB"
+            },
+            "unique_id": "AIDA4MTWGZAOLNCCKQF4H"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA=="
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_internet_gateway",
+      "name": "igw",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:ec2:us-east-1:851725174812:internet-gateway/igw-019a1ccfc892fb868",
+            "id": "igw-019a1ccfc892fb868",
+            "owner_id": "851725174812",
+            "tags": {
+              "Name": "MultiTenant-IGW"
+            },
+            "tags_all": {
+              "Name": "MultiTenant-IGW"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-045b04347f954b2bc"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxMjAwMDAwMDAwMDAwLCJkZWxldGUiOjEyMDAwMDAwMDAwMDAsInVwZGF0ZSI6MTIwMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "aws_vpc.multi_tenant_vpc"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_kms_alias",
+      "name": "tenant_a_alias",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:kms:us-east-1:851725174812:alias/tenantA-key",
+            "id": "alias/tenantA-key",
+            "name": "alias/tenantA-key",
+            "name_prefix": "",
+            "target_key_arn": "arn:aws:kms:us-east-1:851725174812:key/8563cb93-22f7-4860-9e51-0bd2909848ec",
+            "target_key_id": "8563cb93-22f7-4860-9e51-0bd2909848ec"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_kms_key.tenant_a_kms"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_kms_alias",
+      "name": "tenant_b_alias",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:kms:us-east-1:851725174812:alias/tenantB-key",
+            "id": "alias/tenantB-key",
+            "name": "alias/tenantB-key",
+            "name_prefix": "",
+            "target_key_arn": "arn:aws:kms:us-east-1:851725174812:key/54c74a31-bf12-473f-9da9-231d7c8d62bb",
+            "target_key_id": "54c74a31-bf12-473f-9da9-231d7c8d62bb"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_kms_key.tenant_b_kms"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_kms_key",
+      "name": "tenant_a_kms",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:kms:us-east-1:851725174812:key/8563cb93-22f7-4860-9e51-0bd2909848ec",
+            "bypass_policy_lockout_safety_check": false,
+            "custom_key_store_id": "",
+            "customer_master_key_spec": "SYMMETRIC_DEFAULT",
+            "deletion_window_in_days": 7,
+            "description": "KMS key for TenantA",
+            "enable_key_rotation": true,
+            "id": "8563cb93-22f7-4860-9e51-0bd2909848ec",
+            "is_enabled": true,
+            "key_id": "8563cb93-22f7-4860-9e51-0bd2909848ec",
+            "key_usage": "ENCRYPT_DECRYPT",
+            "multi_region": false,
+            "policy": "{\"Id\":\"key-default-1\",\"Statement\":[{\"Action\":\"kms:*\",\"Effect\":\"Allow\",\"Principal\":{\"AWS\":\"arn:aws:iam::851725174812:root\"},\"Resource\":\"*\",\"Sid\":\"Enable IAM User Permissions\"}],\"Version\":\"2012-10-17\"}",
+            "rotation_period_in_days": 365,
+            "tags": {
+              "Name": "TenantA-KMS",
+              "Tenant": "TenantA"
+            },
+            "tags_all": {
+              "Name": "TenantA-KMS",
+              "Tenant": "TenantA"
+            },
+            "timeouts": null,
+            "xks_key_id": ""
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxMjAwMDAwMDAwMDB9fQ=="
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_kms_key",
+      "name": "tenant_b_kms",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:kms:us-east-1:851725174812:key/54c74a31-bf12-473f-9da9-231d7c8d62bb",
+            "bypass_policy_lockout_safety_check": false,
+            "custom_key_store_id": "",
+            "customer_master_key_spec": "SYMMETRIC_DEFAULT",
+            "deletion_window_in_days": 7,
+            "description": "KMS key for TenantB",
+            "enable_key_rotation": true,
+            "id": "54c74a31-bf12-473f-9da9-231d7c8d62bb",
+            "is_enabled": true,
+            "key_id": "54c74a31-bf12-473f-9da9-231d7c8d62bb",
+            "key_usage": "ENCRYPT_DECRYPT",
+            "multi_region": false,
+            "policy": "{\"Id\":\"key-default-1\",\"Statement\":[{\"Action\":\"kms:*\",\"Effect\":\"Allow\",\"Principal\":{\"AWS\":\"arn:aws:iam::851725174812:root\"},\"Resource\":\"*\",\"Sid\":\"Enable IAM User Permissions\"}],\"Version\":\"2012-10-17\"}",
+            "rotation_period_in_days": 365,
+            "tags": {
+              "Name": "TenantB-KMS",
+              "Tenant": "TenantB"
+            },
+            "tags_all": {
+              "Name": "TenantB-KMS",
+              "Tenant": "TenantB"
+            },
+            "timeouts": null,
+            "xks_key_id": ""
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxMjAwMDAwMDAwMDB9fQ=="
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_lambda_function",
+      "name": "upload_handler",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "architectures": [
+              "x86_64"
+            ],
+            "arn": "arn:aws:lambda:us-east-1:851725174812:function:s3UploadLambda",
+            "code_sha256": "0ByeSRFchyV2BuZW2LfJlCbdHHZi7bwaEEbz/QzqqUk=",
+            "code_signing_config_arn": "",
+            "dead_letter_config": [],
+            "description": "",
+            "environment": [],
+            "ephemeral_storage": [
+              {
+                "size": 512
+              }
+            ],
+            "file_system_config": [],
+            "filename": "./lambda_function_payload.zip",
+            "function_name": "s3UploadLambda",
+            "handler": "lambda_function.lambda_handler",
+            "id": "s3UploadLambda",
+            "image_config": [],
+            "image_uri": "",
+            "invoke_arn": "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:851725174812:function:s3UploadLambda/invocations",
+            "kms_key_arn": "",
+            "last_modified": "2025-07-19T08:16:58.000+0000",
+            "layers": [],
+            "logging_config": [
+              {
+                "application_log_level": "",
+                "log_format": "Text",
+                "log_group": "/aws/lambda/s3UploadLambda",
+                "system_log_level": ""
+              }
+            ],
+            "memory_size": 128,
+            "package_type": "Zip",
+            "publish": false,
+            "qualified_arn": "arn:aws:lambda:us-east-1:851725174812:function:s3UploadLambda:$LATEST",
+            "qualified_invoke_arn": "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:851725174812:function:s3UploadLambda:$LATEST/invocations",
+            "replace_security_groups_on_destroy": null,
+            "replacement_security_group_ids": null,
+            "reserved_concurrent_executions": -1,
+            "role": "arn:aws:iam::851725174812:role/lambda_s3_exec_role",
+            "runtime": "python3.12",
+            "s3_bucket": null,
+            "s3_key": null,
+            "s3_object_version": null,
+            "signing_job_arn": "",
+            "signing_profile_version_arn": "",
+            "skip_destroy": false,
+            "snap_start": [],
+            "source_code_hash": "0ByeSRFchyV2BuZW2LfJlCbdHHZi7bwaEEbz/QzqqUk=",
+            "source_code_size": 700,
+            "tags": {},
+            "tags_all": {},
+            "timeout": 15,
+            "timeouts": null,
+            "tracing_config": [
+              {
+                "mode": "PassThrough"
+              }
+            ],
+            "version": "$LATEST",
+            "vpc_config": []
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6NjAwMDAwMDAwMDAwLCJ1cGRhdGUiOjYwMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "aws_iam_role.lambda_exec",
+            "data.archive_file.lambda_zip"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_lambda_permission",
+      "name": "apigw_lambda",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "action": "lambda:InvokeFunction",
+            "event_source_token": null,
+            "function_name": "s3UploadLambda",
+            "function_url_auth_type": null,
+            "id": "AllowAPIGatewayInvoke",
+            "principal": "apigateway.amazonaws.com",
+            "principal_org_id": null,
+            "qualifier": "",
+            "source_account": null,
+            "source_arn": "arn:aws:execute-api:us-east-1:851725174812:pr5fciwe4a/*/*",
+            "statement_id": "AllowAPIGatewayInvoke",
+            "statement_id_prefix": ""
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_apigatewayv2_api.upload_api",
+            "aws_iam_role.lambda_exec",
+            "aws_lambda_function.upload_handler",
+            "data.archive_file.lambda_zip"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_route_table",
+      "name": "public_rt",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:ec2:us-east-1:851725174812:route-table/rtb-0782e949280c7f132",
+            "id": "rtb-0782e949280c7f132",
+            "owner_id": "851725174812",
+            "propagating_vgws": [],
+            "route": [
+              {
+                "carrier_gateway_id": "",
+                "cidr_block": "0.0.0.0/0",
+                "core_network_arn": "",
+                "destination_prefix_list_id": "",
+                "egress_only_gateway_id": "",
+                "gateway_id": "igw-019a1ccfc892fb868",
+                "ipv6_cidr_block": "",
+                "local_gateway_id": "",
+                "nat_gateway_id": "",
+                "network_interface_id": "",
+                "transit_gateway_id": "",
+                "vpc_endpoint_id": "",
+                "vpc_peering_connection_id": ""
+              }
+            ],
+            "tags": {
+              "Name": "MultiTenant-Public-RT"
+            },
+            "tags_all": {
+              "Name": "MultiTenant-Public-RT"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-045b04347f954b2bc"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "aws_internet_gateway.igw",
+            "aws_vpc.multi_tenant_vpc"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_route_table_association",
+      "name": "a",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "gateway_id": "",
+            "id": "rtbassoc-0574587d7687b3bd4",
+            "route_table_id": "rtb-0782e949280c7f132",
+            "subnet_id": "subnet-0db90cd1d5d332c92",
+            "timeouts": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "aws_internet_gateway.igw",
+            "aws_route_table.public_rt",
+            "aws_subnet.tenant_a_subnet",
+            "aws_vpc.multi_tenant_vpc"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_route_table_association",
+      "name": "b",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "gateway_id": "",
+            "id": "rtbassoc-085d69e00f626c335",
+            "route_table_id": "rtb-0782e949280c7f132",
+            "subnet_id": "subnet-02606039b51065c90",
+            "timeouts": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "aws_internet_gateway.igw",
+            "aws_route_table.public_rt",
+            "aws_subnet.tenant_b_subnet",
+            "aws_vpc.multi_tenant_vpc"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_s3_bucket",
+      "name": "cloudtrail_logs",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "acceleration_status": "",
+            "acl": null,
+            "arn": "arn:aws:s3:::multi-tenant-cloudtrail-logs",
+            "bucket": "multi-tenant-cloudtrail-logs",
+            "bucket_domain_name": "multi-tenant-cloudtrail-logs.s3.amazonaws.com",
+            "bucket_prefix": "",
+            "bucket_regional_domain_name": "multi-tenant-cloudtrail-logs.s3.us-east-1.amazonaws.com",
+            "cors_rule": [],
+            "force_destroy": true,
+            "grant": [
+              {
+                "id": "fb361164b679ba1874ac9123fb4ba1fdf6bbb4d845326dae13cfba87979002f2",
+                "permissions": [
+                  "FULL_CONTROL"
+                ],
+                "type": "CanonicalUser",
+                "uri": ""
+              }
+            ],
+            "hosted_zone_id": "Z3AQBSTGFYJSTF",
+            "id": "multi-tenant-cloudtrail-logs",
+            "lifecycle_rule": [],
+            "logging": [],
+            "object_lock_configuration": [],
+            "object_lock_enabled": false,
+            "policy": "{\"Statement\":[{\"Action\":\"s3:GetBucketAcl\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"cloudtrail.amazonaws.com\"},\"Resource\":\"arn:aws:s3:::multi-tenant-cloudtrail-logs\",\"Sid\":\"AWSCloudTrailWrite\"},{\"Action\":\"s3:PutObject\",\"Condition\":{\"StringEquals\":{\"s3:x-amz-acl\":\"bucket-owner-full-control\"}},\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"cloudtrail.amazonaws.com\"},\"Resource\":\"arn:aws:s3:::multi-tenant-cloudtrail-logs/AWSLogs/*\",\"Sid\":\"AWSCloudTrailWriteLogs\"},{\"Action\":\"s3:PutObject\",\"Condition\":{\"StringEquals\":{\"s3:x-amz-acl\":\"bucket-owner-full-control\"}},\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"config.amazonaws.com\"},\"Resource\":\"arn:aws:s3:::multi-tenant-cloudtrail-logs/AWSLogs/*\",\"Sid\":\"AWSConfigWrite\"},{\"Action\":\"s3:GetBucketAcl\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"config.amazonaws.com\"},\"Resource\":\"arn:aws:s3:::multi-tenant-cloudtrail-logs\",\"Sid\":\"AWSConfigGetACL\"}],\"Version\":\"2012-10-17\"}",
+            "region": "us-east-1",
+            "replication_configuration": [],
+            "request_payer": "BucketOwner",
+            "server_side_encryption_configuration": [
+              {
+                "rule": [
+                  {
+                    "apply_server_side_encryption_by_default": [
+                      {
+                        "kms_master_key_id": "",
+                        "sse_algorithm": "AES256"
+                      }
+                    ],
+                    "bucket_key_enabled": false
+                  }
+                ]
+              }
+            ],
+            "tags": {
+              "Name": "CloudTrailLogs"
+            },
+            "tags_all": {
+              "Name": "CloudTrailLogs"
+            },
+            "timeouts": null,
+            "versioning": [
+              {
+                "enabled": false,
+                "mfa_delete": false
+              }
+            ],
+            "website": [],
+            "website_domain": null,
+            "website_endpoint": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxMjAwMDAwMDAwMDAwLCJkZWxldGUiOjM2MDAwMDAwMDAwMDAsInJlYWQiOjEyMDAwMDAwMDAwMDAsInVwZGF0ZSI6MTIwMDAwMDAwMDAwMH19"
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_s3_bucket",
+      "name": "tenanta_user1",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "acceleration_status": "",
+            "acl": null,
+            "arn": "arn:aws:s3:::tenanta-user1-storage",
+            "bucket": "tenanta-user1-storage",
+            "bucket_domain_name": "tenanta-user1-storage.s3.amazonaws.com",
+            "bucket_prefix": "",
+            "bucket_regional_domain_name": "tenanta-user1-storage.s3.us-east-1.amazonaws.com",
+            "cors_rule": [
+              {
+                "allowed_headers": [
+                  "*"
+                ],
+                "allowed_methods": [
+                  "POST",
+                  "PUT"
+                ],
+                "allowed_origins": [
+                  "http://127.0.0.1:5500"
+                ],
+                "expose_headers": [
+                  "ETag"
+                ],
+                "max_age_seconds": 3000
+              }
+            ],
+            "force_destroy": false,
+            "grant": [
+              {
+                "id": "fb361164b679ba1874ac9123fb4ba1fdf6bbb4d845326dae13cfba87979002f2",
+                "permissions": [
+                  "FULL_CONTROL"
+                ],
+                "type": "CanonicalUser",
+                "uri": ""
+              }
+            ],
+            "hosted_zone_id": "Z3AQBSTGFYJSTF",
+            "id": "tenanta-user1-storage",
+            "lifecycle_rule": [],
+            "logging": [
+              {
+                "target_bucket": "tenanta-user1-storage",
+                "target_prefix": ""
+              }
+            ],
+            "object_lock_configuration": [],
+            "object_lock_enabled": false,
+            "policy": "{\"Statement\":[{\"Action\":[\"s3:GetObject\",\"s3:ListBucket\"],\"Effect\":\"Allow\",\"Principal\":\"*\",\"Resource\":[\"arn:aws:s3:::tenanta-user1-storage\",\"arn:aws:s3:::tenanta-user1-storage/*\"],\"Sid\":\"AllowPublicRead\"}],\"Version\":\"2012-10-17\"}",
+            "region": "us-east-1",
+            "replication_configuration": [],
+            "request_payer": "BucketOwner",
+            "server_side_encryption_configuration": [
+              {
+                "rule": [
+                  {
+                    "apply_server_side_encryption_by_default": [
+                      {
+                        "kms_master_key_id": "arn:aws:kms:us-east-1:851725174812:key/8563cb93-22f7-4860-9e51-0bd2909848ec",
+                        "sse_algorithm": "aws:kms"
+                      }
+                    ],
+                    "bucket_key_enabled": false
+                  }
+                ]
+              }
+            ],
+            "tags": {
+              "Tenant": "TenantA",
+              "User": "User1"
+            },
+            "tags_all": {
+              "Tenant": "TenantA",
+              "User": "User1"
+            },
+            "timeouts": null,
+            "versioning": [
+              {
+                "enabled": false,
+                "mfa_delete": false
+              }
+            ],
+            "website": [],
+            "website_domain": null,
+            "website_endpoint": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxMjAwMDAwMDAwMDAwLCJkZWxldGUiOjM2MDAwMDAwMDAwMDAsInJlYWQiOjEyMDAwMDAwMDAwMDAsInVwZGF0ZSI6MTIwMDAwMDAwMDAwMH19"
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_s3_bucket",
+      "name": "tenanta_user2",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "acceleration_status": "",
+            "acl": null,
+            "arn": "arn:aws:s3:::tenanta-user2-storage",
+            "bucket": "tenanta-user2-storage",
+            "bucket_domain_name": "tenanta-user2-storage.s3.amazonaws.com",
+            "bucket_prefix": "",
+            "bucket_regional_domain_name": "tenanta-user2-storage.s3.us-east-1.amazonaws.com",
+            "cors_rule": [
+              {
+                "allowed_headers": [
+                  "*"
+                ],
+                "allowed_methods": [
+                  "POST",
+                  "PUT"
+                ],
+                "allowed_origins": [
+                  "http://127.0.0.1:5500"
+                ],
+                "expose_headers": [
+                  "ETag"
+                ],
+                "max_age_seconds": 3000
+              }
+            ],
+            "force_destroy": false,
+            "grant": [
+              {
+                "id": "fb361164b679ba1874ac9123fb4ba1fdf6bbb4d845326dae13cfba87979002f2",
+                "permissions": [
+                  "FULL_CONTROL"
+                ],
+                "type": "CanonicalUser",
+                "uri": ""
+              }
+            ],
+            "hosted_zone_id": "Z3AQBSTGFYJSTF",
+            "id": "tenanta-user2-storage",
+            "lifecycle_rule": [],
+            "logging": [],
+            "object_lock_configuration": [],
+            "object_lock_enabled": false,
+            "policy": "",
+            "region": "us-east-1",
+            "replication_configuration": [],
+            "request_payer": "BucketOwner",
+            "server_side_encryption_configuration": [
+              {
+                "rule": [
+                  {
+                    "apply_server_side_encryption_by_default": [
+                      {
+                        "kms_master_key_id": "arn:aws:kms:us-east-1:851725174812:key/8563cb93-22f7-4860-9e51-0bd2909848ec",
+                        "sse_algorithm": "aws:kms"
+                      }
+                    ],
+                    "bucket_key_enabled": false
+                  }
+                ]
+              }
+            ],
+            "tags": {
+              "Tenant": "TenantA",
+              "User": "User2"
+            },
+            "tags_all": {
+              "Tenant": "TenantA",
+              "User": "User2"
+            },
+            "timeouts": null,
+            "versioning": [
+              {
+                "enabled": false,
+                "mfa_delete": false
+              }
+            ],
+            "website": [],
+            "website_domain": null,
+            "website_endpoint": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxMjAwMDAwMDAwMDAwLCJkZWxldGUiOjM2MDAwMDAwMDAwMDAsInJlYWQiOjEyMDAwMDAwMDAwMDAsInVwZGF0ZSI6MTIwMDAwMDAwMDAwMH19"
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_s3_bucket",
+      "name": "tenanta_user3",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "acceleration_status": "",
+            "acl": null,
+            "arn": "arn:aws:s3:::tenanta-user3-storage",
+            "bucket": "tenanta-user3-storage",
+            "bucket_domain_name": "tenanta-user3-storage.s3.amazonaws.com",
+            "bucket_prefix": "",
+            "bucket_regional_domain_name": "tenanta-user3-storage.s3.us-east-1.amazonaws.com",
+            "cors_rule": [
+              {
+                "allowed_headers": [
+                  "*"
+                ],
+                "allowed_methods": [
+                  "POST",
+                  "PUT"
+                ],
+                "allowed_origins": [
+                  "http://127.0.0.1:5500"
+                ],
+                "expose_headers": [
+                  "ETag"
+                ],
+                "max_age_seconds": 3000
+              }
+            ],
+            "force_destroy": false,
+            "grant": [
+              {
+                "id": "fb361164b679ba1874ac9123fb4ba1fdf6bbb4d845326dae13cfba87979002f2",
+                "permissions": [
+                  "FULL_CONTROL"
+                ],
+                "type": "CanonicalUser",
+                "uri": ""
+              }
+            ],
+            "hosted_zone_id": "Z3AQBSTGFYJSTF",
+            "id": "tenanta-user3-storage",
+            "lifecycle_rule": [],
+            "logging": [],
+            "object_lock_configuration": [],
+            "object_lock_enabled": false,
+            "policy": "",
+            "region": "us-east-1",
+            "replication_configuration": [],
+            "request_payer": "BucketOwner",
+            "server_side_encryption_configuration": [
+              {
+                "rule": [
+                  {
+                    "apply_server_side_encryption_by_default": [
+                      {
+                        "kms_master_key_id": "arn:aws:kms:us-east-1:851725174812:key/8563cb93-22f7-4860-9e51-0bd2909848ec",
+                        "sse_algorithm": "aws:kms"
+                      }
+                    ],
+                    "bucket_key_enabled": false
+                  }
+                ]
+              }
+            ],
+            "tags": {
+              "Tenant": "TenantA",
+              "User": "User3"
+            },
+            "tags_all": {
+              "Tenant": "TenantA",
+              "User": "User3"
+            },
+            "timeouts": null,
+            "versioning": [
+              {
+                "enabled": false,
+                "mfa_delete": false
+              }
+            ],
+            "website": [],
+            "website_domain": null,
+            "website_endpoint": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxMjAwMDAwMDAwMDAwLCJkZWxldGUiOjM2MDAwMDAwMDAwMDAsInJlYWQiOjEyMDAwMDAwMDAwMDAsInVwZGF0ZSI6MTIwMDAwMDAwMDAwMH19"
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_s3_bucket",
+      "name": "tenantb_user1",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "acceleration_status": "",
+            "acl": null,
+            "arn": "arn:aws:s3:::tenantb-user1-storage",
+            "bucket": "tenantb-user1-storage",
+            "bucket_domain_name": "tenantb-user1-storage.s3.amazonaws.com",
+            "bucket_prefix": "",
+            "bucket_regional_domain_name": "tenantb-user1-storage.s3.us-east-1.amazonaws.com",
+            "cors_rule": [
+              {
+                "allowed_headers": [
+                  "*"
+                ],
+                "allowed_methods": [
+                  "POST",
+                  "PUT"
+                ],
+                "allowed_origins": [
+                  "http://127.0.0.1:5500"
+                ],
+                "expose_headers": [
+                  "ETag"
+                ],
+                "max_age_seconds": 3000
+              }
+            ],
+            "force_destroy": false,
+            "grant": [
+              {
+                "id": "fb361164b679ba1874ac9123fb4ba1fdf6bbb4d845326dae13cfba87979002f2",
+                "permissions": [
+                  "FULL_CONTROL"
+                ],
+                "type": "CanonicalUser",
+                "uri": ""
+              }
+            ],
+            "hosted_zone_id": "Z3AQBSTGFYJSTF",
+            "id": "tenantb-user1-storage",
+            "lifecycle_rule": [],
+            "logging": [],
+            "object_lock_configuration": [],
+            "object_lock_enabled": false,
+            "policy": "",
+            "region": "us-east-1",
+            "replication_configuration": [],
+            "request_payer": "BucketOwner",
+            "server_side_encryption_configuration": [
+              {
+                "rule": [
+                  {
+                    "apply_server_side_encryption_by_default": [
+                      {
+                        "kms_master_key_id": "arn:aws:kms:us-east-1:851725174812:key/54c74a31-bf12-473f-9da9-231d7c8d62bb",
+                        "sse_algorithm": "aws:kms"
+                      }
+                    ],
+                    "bucket_key_enabled": false
+                  }
+                ]
+              }
+            ],
+            "tags": {
+              "Tenant": "TenantB",
+              "User": "User1"
+            },
+            "tags_all": {
+              "Tenant": "TenantB",
+              "User": "User1"
+            },
+            "timeouts": null,
+            "versioning": [
+              {
+                "enabled": false,
+                "mfa_delete": false
+              }
+            ],
+            "website": [],
+            "website_domain": null,
+            "website_endpoint": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxMjAwMDAwMDAwMDAwLCJkZWxldGUiOjM2MDAwMDAwMDAwMDAsInJlYWQiOjEyMDAwMDAwMDAwMDAsInVwZGF0ZSI6MTIwMDAwMDAwMDAwMH19"
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_s3_bucket",
+      "name": "tenantb_user2",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "acceleration_status": "",
+            "acl": null,
+            "arn": "arn:aws:s3:::tenantb-user2-storage",
+            "bucket": "tenantb-user2-storage",
+            "bucket_domain_name": "tenantb-user2-storage.s3.amazonaws.com",
+            "bucket_prefix": "",
+            "bucket_regional_domain_name": "tenantb-user2-storage.s3.us-east-1.amazonaws.com",
+            "cors_rule": [
+              {
+                "allowed_headers": [
+                  "*"
+                ],
+                "allowed_methods": [
+                  "POST",
+                  "PUT"
+                ],
+                "allowed_origins": [
+                  "http://127.0.0.1:5500"
+                ],
+                "expose_headers": [
+                  "ETag"
+                ],
+                "max_age_seconds": 3000
+              }
+            ],
+            "force_destroy": false,
+            "grant": [
+              {
+                "id": "fb361164b679ba1874ac9123fb4ba1fdf6bbb4d845326dae13cfba87979002f2",
+                "permissions": [
+                  "FULL_CONTROL"
+                ],
+                "type": "CanonicalUser",
+                "uri": ""
+              }
+            ],
+            "hosted_zone_id": "Z3AQBSTGFYJSTF",
+            "id": "tenantb-user2-storage",
+            "lifecycle_rule": [],
+            "logging": [],
+            "object_lock_configuration": [],
+            "object_lock_enabled": false,
+            "policy": "",
+            "region": "us-east-1",
+            "replication_configuration": [],
+            "request_payer": "BucketOwner",
+            "server_side_encryption_configuration": [
+              {
+                "rule": [
+                  {
+                    "apply_server_side_encryption_by_default": [
+                      {
+                        "kms_master_key_id": "arn:aws:kms:us-east-1:851725174812:key/54c74a31-bf12-473f-9da9-231d7c8d62bb",
+                        "sse_algorithm": "aws:kms"
+                      }
+                    ],
+                    "bucket_key_enabled": false
+                  }
+                ]
+              }
+            ],
+            "tags": {
+              "Tenant": "TenantB",
+              "User": "User2"
+            },
+            "tags_all": {
+              "Tenant": "TenantB",
+              "User": "User2"
+            },
+            "timeouts": null,
+            "versioning": [
+              {
+                "enabled": false,
+                "mfa_delete": false
+              }
+            ],
+            "website": [],
+            "website_domain": null,
+            "website_endpoint": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxMjAwMDAwMDAwMDAwLCJkZWxldGUiOjM2MDAwMDAwMDAwMDAsInJlYWQiOjEyMDAwMDAwMDAwMDAsInVwZGF0ZSI6MTIwMDAwMDAwMDAwMH19"
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_s3_bucket",
+      "name": "tenantb_user3",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "acceleration_status": "",
+            "acl": null,
+            "arn": "arn:aws:s3:::tenantb-user3-storage",
+            "bucket": "tenantb-user3-storage",
+            "bucket_domain_name": "tenantb-user3-storage.s3.amazonaws.com",
+            "bucket_prefix": "",
+            "bucket_regional_domain_name": "tenantb-user3-storage.s3.us-east-1.amazonaws.com",
+            "cors_rule": [
+              {
+                "allowed_headers": [
+                  "*"
+                ],
+                "allowed_methods": [
+                  "POST",
+                  "PUT"
+                ],
+                "allowed_origins": [
+                  "http://127.0.0.1:5500"
+                ],
+                "expose_headers": [
+                  "ETag"
+                ],
+                "max_age_seconds": 3000
+              }
+            ],
+            "force_destroy": false,
+            "grant": [
+              {
+                "id": "fb361164b679ba1874ac9123fb4ba1fdf6bbb4d845326dae13cfba87979002f2",
+                "permissions": [
+                  "FULL_CONTROL"
+                ],
+                "type": "CanonicalUser",
+                "uri": ""
+              }
+            ],
+            "hosted_zone_id": "Z3AQBSTGFYJSTF",
+            "id": "tenantb-user3-storage",
+            "lifecycle_rule": [],
+            "logging": [],
+            "object_lock_configuration": [],
+            "object_lock_enabled": false,
+            "policy": "",
+            "region": "us-east-1",
+            "replication_configuration": [],
+            "request_payer": "BucketOwner",
+            "server_side_encryption_configuration": [
+              {
+                "rule": [
+                  {
+                    "apply_server_side_encryption_by_default": [
+                      {
+                        "kms_master_key_id": "arn:aws:kms:us-east-1:851725174812:key/54c74a31-bf12-473f-9da9-231d7c8d62bb",
+                        "sse_algorithm": "aws:kms"
+                      }
+                    ],
+                    "bucket_key_enabled": false
+                  }
+                ]
+              }
+            ],
+            "tags": {
+              "Tenant": "TenantB",
+              "User": "User3"
+            },
+            "tags_all": {
+              "Tenant": "TenantB",
+              "User": "User3"
+            },
+            "timeouts": null,
+            "versioning": [
+              {
+                "enabled": false,
+                "mfa_delete": false
+              }
+            ],
+            "website": [],
+            "website_domain": null,
+            "website_endpoint": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxMjAwMDAwMDAwMDAwLCJkZWxldGUiOjM2MDAwMDAwMDAwMDAsInJlYWQiOjEyMDAwMDAwMDAwMDAsInVwZGF0ZSI6MTIwMDAwMDAwMDAwMH19"
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_s3_bucket_cors_configuration",
+      "name": "all_cors",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "index_key": "tenanta-user1-storage",
+          "schema_version": 0,
+          "attributes": {
+            "bucket": "tenanta-user1-storage",
+            "cors_rule": [
+              {
+                "allowed_headers": [
+                  "*"
+                ],
+                "allowed_methods": [
+                  "POST"
+                ],
+                "allowed_origins": [
+                  "*"
+                ],
+                "expose_headers": [
+                  "ETag"
+                ],
+                "id": "",
+                "max_age_seconds": 3000
+              }
+            ],
+            "expected_bucket_owner": "",
+            "id": "tenanta-user1-storage"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA=="
+        },
+        {
+          "index_key": "tenanta-user2-storage",
+          "status": "tainted",
+          "schema_version": 0,
+          "attributes": {
+            "bucket": "tenanta-user2-storage",
+            "cors_rule": [
+              {
+                "allowed_headers": [
+                  "*"
+                ],
+                "allowed_methods": [
+                  "POST"
+                ],
+                "allowed_origins": [
+                  "*"
+                ],
+                "expose_headers": [
+                  "ETag"
+                ],
+                "id": "",
+                "max_age_seconds": 3000
+              }
+            ],
+            "expected_bucket_owner": null,
+            "id": "tenanta-user2-storage"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA=="
+        },
+        {
+          "index_key": "tenanta-user3-storage",
+          "schema_version": 0,
+          "attributes": {
+            "bucket": "tenanta-user3-storage",
+            "cors_rule": [
+              {
+                "allowed_headers": [
+                  "*"
+                ],
+                "allowed_methods": [
+                  "POST"
+                ],
+                "allowed_origins": [
+                  "*"
+                ],
+                "expose_headers": [
+                  "ETag"
+                ],
+                "id": "",
+                "max_age_seconds": 3000
+              }
+            ],
+            "expected_bucket_owner": "",
+            "id": "tenanta-user3-storage"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA=="
+        },
+        {
+          "index_key": "tenantb-user1-storage",
+          "schema_version": 0,
+          "attributes": {
+            "bucket": "tenantb-user1-storage",
+            "cors_rule": [
+              {
+                "allowed_headers": [
+                  "*"
+                ],
+                "allowed_methods": [
+                  "POST"
+                ],
+                "allowed_origins": [
+                  "*"
+                ],
+                "expose_headers": [
+                  "ETag"
+                ],
+                "id": "",
+                "max_age_seconds": 3000
+              }
+            ],
+            "expected_bucket_owner": "",
+            "id": "tenantb-user1-storage"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA=="
+        },
+        {
+          "index_key": "tenantb-user2-storage",
+          "status": "tainted",
+          "schema_version": 0,
+          "attributes": {
+            "bucket": "tenantb-user2-storage",
+            "cors_rule": [
+              {
+                "allowed_headers": [
+                  "*"
+                ],
+                "allowed_methods": [
+                  "POST"
+                ],
+                "allowed_origins": [
+                  "*"
+                ],
+                "expose_headers": [
+                  "ETag"
+                ],
+                "id": "",
+                "max_age_seconds": 3000
+              }
+            ],
+            "expected_bucket_owner": null,
+            "id": "tenantb-user2-storage"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA=="
+        },
+        {
+          "index_key": "tenantb-user3-storage",
+          "schema_version": 0,
+          "attributes": {
+            "bucket": "tenantb-user3-storage",
+            "cors_rule": [
+              {
+                "allowed_headers": [
+                  "*"
+                ],
+                "allowed_methods": [
+                  "POST"
+                ],
+                "allowed_origins": [
+                  "*"
+                ],
+                "expose_headers": [
+                  "ETag"
+                ],
+                "id": "",
+                "max_age_seconds": 3000
+              }
+            ],
+            "expected_bucket_owner": "",
+            "id": "tenantb-user3-storage"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA=="
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_s3_bucket_policy",
+      "name": "cloudtrail_policy",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "bucket": "multi-tenant-cloudtrail-logs",
+            "id": "multi-tenant-cloudtrail-logs",
+            "policy": "{\"Statement\":[{\"Action\":\"s3:GetBucketAcl\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"cloudtrail.amazonaws.com\"},\"Resource\":\"arn:aws:s3:::multi-tenant-cloudtrail-logs\",\"Sid\":\"AWSCloudTrailWrite\"},{\"Action\":\"s3:PutObject\",\"Condition\":{\"StringEquals\":{\"s3:x-amz-acl\":\"bucket-owner-full-control\"}},\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"cloudtrail.amazonaws.com\"},\"Resource\":\"arn:aws:s3:::multi-tenant-cloudtrail-logs/AWSLogs/*\",\"Sid\":\"AWSCloudTrailWriteLogs\"},{\"Action\":\"s3:PutObject\",\"Condition\":{\"StringEquals\":{\"s3:x-amz-acl\":\"bucket-owner-full-control\"}},\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"config.amazonaws.com\"},\"Resource\":\"arn:aws:s3:::multi-tenant-cloudtrail-logs/AWSLogs/*\",\"Sid\":\"AWSConfigWrite\"},{\"Action\":\"s3:GetBucketAcl\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"config.amazonaws.com\"},\"Resource\":\"arn:aws:s3:::multi-tenant-cloudtrail-logs\",\"Sid\":\"AWSConfigGetACL\"}],\"Version\":\"2012-10-17\"}"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_s3_bucket.cloudtrail_logs"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_s3_bucket_server_side_encryption_configuration",
+      "name": "tenanta_user1_enc",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "bucket": "tenanta-user1-storage",
+            "expected_bucket_owner": "",
+            "id": "tenanta-user1-storage",
+            "rule": [
+              {
+                "apply_server_side_encryption_by_default": [
+                  {
+                    "kms_master_key_id": "arn:aws:kms:us-east-1:851725174812:key/8563cb93-22f7-4860-9e51-0bd2909848ec",
+                    "sse_algorithm": "aws:kms"
+                  }
+                ],
+                "bucket_key_enabled": false
+              }
+            ]
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_kms_key.tenant_a_kms",
+            "aws_s3_bucket.tenanta_user1"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_s3_bucket_server_side_encryption_configuration",
+      "name": "tenanta_user2_enc",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "bucket": "tenanta-user2-storage",
+            "expected_bucket_owner": "",
+            "id": "tenanta-user2-storage",
+            "rule": [
+              {
+                "apply_server_side_encryption_by_default": [
+                  {
+                    "kms_master_key_id": "arn:aws:kms:us-east-1:851725174812:key/8563cb93-22f7-4860-9e51-0bd2909848ec",
+                    "sse_algorithm": "aws:kms"
+                  }
+                ],
+                "bucket_key_enabled": false
+              }
+            ]
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_kms_key.tenant_a_kms",
+            "aws_s3_bucket.tenanta_user2"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_s3_bucket_server_side_encryption_configuration",
+      "name": "tenanta_user3_enc",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "bucket": "tenanta-user3-storage",
+            "expected_bucket_owner": "",
+            "id": "tenanta-user3-storage",
+            "rule": [
+              {
+                "apply_server_side_encryption_by_default": [
+                  {
+                    "kms_master_key_id": "arn:aws:kms:us-east-1:851725174812:key/8563cb93-22f7-4860-9e51-0bd2909848ec",
+                    "sse_algorithm": "aws:kms"
+                  }
+                ],
+                "bucket_key_enabled": false
+              }
+            ]
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_kms_key.tenant_a_kms",
+            "aws_s3_bucket.tenanta_user3"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_s3_bucket_server_side_encryption_configuration",
+      "name": "tenantb_user1_enc",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "bucket": "tenantb-user1-storage",
+            "expected_bucket_owner": "",
+            "id": "tenantb-user1-storage",
+            "rule": [
+              {
+                "apply_server_side_encryption_by_default": [
+                  {
+                    "kms_master_key_id": "arn:aws:kms:us-east-1:851725174812:key/54c74a31-bf12-473f-9da9-231d7c8d62bb",
+                    "sse_algorithm": "aws:kms"
+                  }
+                ],
+                "bucket_key_enabled": false
+              }
+            ]
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_kms_key.tenant_b_kms",
+            "aws_s3_bucket.tenantb_user1"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_s3_bucket_server_side_encryption_configuration",
+      "name": "tenantb_user2_enc",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "bucket": "tenantb-user2-storage",
+            "expected_bucket_owner": "",
+            "id": "tenantb-user2-storage",
+            "rule": [
+              {
+                "apply_server_side_encryption_by_default": [
+                  {
+                    "kms_master_key_id": "arn:aws:kms:us-east-1:851725174812:key/54c74a31-bf12-473f-9da9-231d7c8d62bb",
+                    "sse_algorithm": "aws:kms"
+                  }
+                ],
+                "bucket_key_enabled": false
+              }
+            ]
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_kms_key.tenant_b_kms",
+            "aws_s3_bucket.tenantb_user2"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_s3_bucket_server_side_encryption_configuration",
+      "name": "tenantb_user3_enc",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "bucket": "tenantb-user3-storage",
+            "expected_bucket_owner": "",
+            "id": "tenantb-user3-storage",
+            "rule": [
+              {
+                "apply_server_side_encryption_by_default": [
+                  {
+                    "kms_master_key_id": "arn:aws:kms:us-east-1:851725174812:key/54c74a31-bf12-473f-9da9-231d7c8d62bb",
+                    "sse_algorithm": "aws:kms"
+                  }
+                ],
+                "bucket_key_enabled": false
+              }
+            ]
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_kms_key.tenant_b_kms",
+            "aws_s3_bucket.tenantb_user3"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_subnet",
+      "name": "tenant_a_subnet",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:us-east-1:851725174812:subnet/subnet-0db90cd1d5d332c92",
+            "assign_ipv6_address_on_creation": false,
+            "availability_zone": "us-east-1a",
+            "availability_zone_id": "use1-az1",
+            "cidr_block": "10.0.1.0/24",
+            "customer_owned_ipv4_pool": "",
+            "enable_dns64": false,
+            "enable_lni_at_device_index": 0,
+            "enable_resource_name_dns_a_record_on_launch": false,
+            "enable_resource_name_dns_aaaa_record_on_launch": false,
+            "id": "subnet-0db90cd1d5d332c92",
+            "ipv6_cidr_block": "",
+            "ipv6_cidr_block_association_id": "",
+            "ipv6_native": false,
+            "map_customer_owned_ip_on_launch": false,
+            "map_public_ip_on_launch": true,
+            "outpost_arn": "",
+            "owner_id": "851725174812",
+            "private_dns_hostname_type_on_launch": "ip-name",
+            "tags": {
+              "Name": "TenantA-Subnet",
+              "Tenant": "TenantA"
+            },
+            "tags_all": {
+              "Name": "TenantA-Subnet",
+              "Tenant": "TenantA"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-045b04347f954b2bc"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6MTIwMDAwMDAwMDAwMH0sInNjaGVtYV92ZXJzaW9uIjoiMSJ9",
+          "dependencies": [
+            "aws_vpc.multi_tenant_vpc"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_subnet",
+      "name": "tenant_b_subnet",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:us-east-1:851725174812:subnet/subnet-02606039b51065c90",
+            "assign_ipv6_address_on_creation": false,
+            "availability_zone": "us-east-1b",
+            "availability_zone_id": "use1-az2",
+            "cidr_block": "10.0.2.0/24",
+            "customer_owned_ipv4_pool": "",
+            "enable_dns64": false,
+            "enable_lni_at_device_index": 0,
+            "enable_resource_name_dns_a_record_on_launch": false,
+            "enable_resource_name_dns_aaaa_record_on_launch": false,
+            "id": "subnet-02606039b51065c90",
+            "ipv6_cidr_block": "",
+            "ipv6_cidr_block_association_id": "",
+            "ipv6_native": false,
+            "map_customer_owned_ip_on_launch": false,
+            "map_public_ip_on_launch": true,
+            "outpost_arn": "",
+            "owner_id": "851725174812",
+            "private_dns_hostname_type_on_launch": "ip-name",
+            "tags": {
+              "Name": "TenantB-Subnet",
+              "Tenant": "TenantB"
+            },
+            "tags_all": {
+              "Name": "TenantB-Subnet",
+              "Tenant": "TenantB"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-045b04347f954b2bc"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6MTIwMDAwMDAwMDAwMH0sInNjaGVtYV92ZXJzaW9uIjoiMSJ9",
+          "dependencies": [
+            "aws_vpc.multi_tenant_vpc"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_vpc",
+      "name": "multi_tenant_vpc",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:us-east-1:851725174812:vpc/vpc-045b04347f954b2bc",
+            "assign_generated_ipv6_cidr_block": false,
+            "cidr_block": "10.0.0.0/16",
+            "default_network_acl_id": "acl-0b240d9428dc43a8e",
+            "default_route_table_id": "rtb-0f0e09514bcd6b6be",
+            "default_security_group_id": "sg-0e2f4002db3b5a9fd",
+            "dhcp_options_id": "dopt-09606c41f42038e8b",
+            "enable_dns_hostnames": false,
+            "enable_dns_support": true,
+            "enable_network_address_usage_metrics": false,
+            "id": "vpc-045b04347f954b2bc",
+            "instance_tenancy": "default",
+            "ipv4_ipam_pool_id": null,
+            "ipv4_netmask_length": null,
+            "ipv6_association_id": "",
+            "ipv6_cidr_block": "",
+            "ipv6_cidr_block_network_border_group": "",
+            "ipv6_ipam_pool_id": "",
+            "ipv6_netmask_length": 0,
+            "main_route_table_id": "rtb-0f0e09514bcd6b6be",
+            "owner_id": "851725174812",
+            "tags": {
+              "Name": "MultiTenant-VPC"
+            },
+            "tags_all": {
+              "Name": "MultiTenant-VPC"
+            }
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjEifQ=="
+        }
+      ]
+    }
+  ],
+  "check_results": null
+}
