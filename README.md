@@ -66,6 +66,7 @@ aws s3 cp "file.txt" s3://tenantb-user1-storage/ --profile tenanta-user1
 - ✅ Own bucket upload: **Allowed**
 - ❌ Cross-tenant upload: **Denied**
 - 🎯 Isolation achieved through IAM + S3 + Terraform.
+<img width="1920" height="1080" alt="Screenshot (304)" src="https://github.com/user-attachments/assets/d8f0c0a0-f5a7-4f66-9417-abdecf6d8bd1" />
 
 ---
 
