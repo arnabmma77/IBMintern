@@ -22,21 +22,29 @@ This project demonstrates secure multi-tenant architecture on AWS, ensuring stri
   - `TenantA-User1`, `TenantA-User2`, `TenantA-User3`
   - `TenantB-User1`, `TenantB-User2`, `TenantB-User3`
 - Created IAM roles for each tenant group.
+  <img width="1899" height="766" alt="Screenshot (307)" src="https://github.com/user-attachments/assets/3d464df9-e3b8-45ec-9987-50404b74d81d" />
+
 
 ### Week 2: S3 Buckets & Isolation
 - Created unique buckets per user, e.g.:
   - `tenanta-user1-storage`, `tenantb-user1-storage`, etc.
 - Applied S3 bucket policies to block public access and enable private user access only.
+  <img width="1920" height="1080" alt="Screenshot (308)" src="https://github.com/user-attachments/assets/6441bcf5-5958-401d-86d3-6852c36de67b" />
+
 
 ### Week 3: Encryption & TLS
 - Created **KMS keys** for each tenant's data.
 - Configured **server-side encryption** for each S3 bucket.
+  <img width="1920" height="1080" alt="Screenshot (309)" src="https://github.com/user-attachments/assets/8c4035a8-c06b-4840-880c-f9dc6224098e" />
+
 
 ### Week 4: Logging & Audit Trails
 - Enabled **AWS CloudTrail** to capture API activity.
 - Configured **AWS Config rules**:
   - Prevent public buckets.
   - Enforce S3 encryption.
+    <img width="1920" height="1080" alt="Screenshot (310)" src="https://github.com/user-attachments/assets/2f27d0b1-374a-4bb1-b92a-296ee732d689" />
+
 
 ---
 
@@ -75,6 +83,8 @@ aws s3 cp "file.txt" s3://tenantb-user1-storage/ --profile tenanta-user1
 1. Run:
 ```bash
 terraform destroy
+
+
 ```
 2. If errors:
    - Manually delete:
@@ -82,6 +92,9 @@ terraform destroy
      - IAM login profiles
      - Attached user policies
      - IAM access keys
+       
+<img width="1920" height="1080" alt="Screenshot (315)" src="https://github.com/user-attachments/assets/7142fc1d-ccb0-4806-a637-0bd0ab3358d7" />
+
 
 ---
 
